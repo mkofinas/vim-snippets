@@ -38,15 +38,38 @@ int main(int argc, char *argv[])
 endsnippet
 
 snippet for "for loop (for)"
-for (${2:i} = 0; $2 < ${1:count}; ${3:++$2}) {
+for (${2:i} = 0; $2 < ${1:count}; ${3:++$2})
+{
 	${VISUAL}${0}
 }
 endsnippet
 
 snippet fori "for int loop (fori)"
-for (${4:int} ${2:i} = 0; $2 < ${1:count}; ${3:++$2}) {
+for (${4:int} ${2:ii} = 0; $2 < ${1:count}; ${3:++$2})
+{
 	${VISUAL}${0}
 }
+endsnippet
+
+snippet forj "for int loop (forj)"
+for (${4:int} ${2:jj} = 0; $2 < ${1:count}; ${3:++$2})
+{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet dfor "double for loop (dfor)"
+for (int ${3:ii} = 0; $3 < ${1:rows}; ++$3)
+{
+	for (int ${4:jj} = 0; $4 < ${2:cols}; ++$4)
+	{
+		${VISUAL}${0}
+	}
+}
+endsnippet
+
+snippet enum "Enumeration"
+enum ${1:name} { $0 };
 endsnippet
 
 snippet once "Include header once only guard"
@@ -62,15 +85,53 @@ else:
 
 ${VISUAL}${0}
 
-#endif /* end of include guard: $1 */
+#endif  // $1
+endsnippet
+
+snippet td "Typedef"
+typedef ${1:int} ${2:MyCustomType};
+endsnippet
+
+snippet wh "while loop"
+while (${1:/* condition */})
+{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet do "do...while loop (do)"
+do
+{
+	${VISUAL}${0}
+}
+while (${1:/* condition */});
 endsnippet
 
 snippet fprintf "fprintf ..."
 fprintf(${1:stderr}, "${2:%s}\n"${2/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$3${2/([^%]|%%)*(%.)?.*/(?2:\);)/}
 endsnippet
 
+snippet if "if .. (if)"
+if (${1:/* condition */})
+{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet ife "if else .. (ifel)"
+if (${2:/* condition */})
+{
+	${VISUAL}${0}
+}
+else
+{
+	${VISUAL}${1}
+}
+endsnippet
+
 snippet eli "else if .. (eli)"
-else if (${1:/* condition */}) {
+else if (${1:/* condition */})
+{
 	${VISUAL}${0}
 }
 endsnippet
