@@ -82,17 +82,17 @@ if not snip.c:
 	header_guard_components = []
 
 	for ii in range(len(folders_list) - 1, -1, -1):
-	    if (ii > 1 and folders_list[ii - 1] == "include" and
-		folders_list[ii] == folders_list[ii - 2]):
+		if (ii > 1 and folders_list[ii - 1] == "include" and
+			folders_list[ii] == folders_list[ii - 2]):
 
-		header_guard_components.append(folders_list[ii - 2])
-		break
-	    else:
-		header_guard_components.append(folders_list[ii])
+			header_guard_components.append(folders_list[ii - 2])
+			break
+		else:
+			header_guard_components.append(folders_list[ii])
 
 	header_guard_name = ""
 	for ii in range(len(header_guard_components) - 1, -1, -1):
-	    header_guard_name += str(header_guard_components[ii]).upper() + "_"
+		header_guard_name += str(header_guard_components[ii]).upper() + "_"
 	snip.rv = header_guard_name + name
 else:
 	snip.rv = snip.c`}
