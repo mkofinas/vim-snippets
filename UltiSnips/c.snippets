@@ -78,15 +78,17 @@ if not snip.c:
 	import os, string
 	name = re.sub(r'[^A-Za-z0-9]+','_', snip.fn).upper()
 
-	pathList = os.getcwd().split("/")
+	folders_list = os.getcwd().split("/")
 	header_guard_components = []
 
-	for ii in range(len(pathList) - 1, -1, -1):
-	    if ii > 0 and pathList[ii - 1] == "include":
-		header_guard_components.append(pathList[ii - 2])
+	for ii in range(len(folders_list) - 1, -1, -1):
+	    if (ii > 1 and folders_list[ii - 1] == "include" and
+		folders_list[ii] == folders_list[ii - 2]):
+
+		header_guard_components.append(folders_list[ii - 2])
 		break
 	    else:
-		header_guard_components.append(pathList[ii])
+		header_guard_components.append(folders_list[ii])
 
 	header_guard_name = ""
 	for ii in range(len(header_guard_components) - 1, -1, -1):
