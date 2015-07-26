@@ -34,6 +34,38 @@ namespace${1/.+/ /m}${1:`!p snip.rv = snip.basename or "name"`}
 }${1/.+/  \/\/ /m}$1${1/.+//m}
 endsnippet
 
+snippet nsros "namespace for ROS.. (namespace)"
+namespace ${1:`!p
+if not snip.c:
+        import os, rospkg
+
+        file_path = os.getcwd()
+        pkg_name = rospkg.get_package_name(file_path)
+        pkg_path = rospkg.RosPack().get_path(pkg_name)
+
+        metapkg_path = os.path.dirname(pkg_path)
+        metapkg_name = os.path.basename(metapkg_path)
+
+        snip.rv = metapkg_name
+else:
+        snip.rv = snip.c`}
+{
+namespace ${2:`!p
+if not snip.c:
+        import os, rospkg
+
+        file_path = os.getcwd()
+        pkg_name = rospkg.get_package_name(file_path)
+
+        snip.rv = pkg_name
+else:
+        snip.rv = snip.c`}
+{
+        ${VISUAL}${0}
+}${2/.+/  \/\/ /m}$2${2/.+//m}
+}${1/.+/  \/\/ /m}$1${1/.+//m}
+endsnippet
+
 snippet readfile "read file (readF)"
 std::vector<char> v;
 if (FILE *fp = fopen(${1:"filename"}, "r"))
