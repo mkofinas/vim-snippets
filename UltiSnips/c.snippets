@@ -59,9 +59,9 @@ for (int jj = 0; jj < ${1:count}; ++jj)
 endsnippet
 
 snippet dfor "double for loop (dfor)"
-for (int ${3:ii} = 0; $3 < ${1:rows}; ++$3)
+for (int ${3:ii} = 0; $3 < ${1:mat}.rows; ++$3)
 {
-	for (int ${4:jj} = 0; $4 < ${2:cols}; ++$4)
+	for (int ${4:jj} = 0; $4 < $1.cols; ++$4)
 	{
 		${VISUAL}${0}
 	}
@@ -81,11 +81,14 @@ if not snip.c:
 	folders_list = os.getcwd().split("/")
 	header_guard_components = []
 
-	for ii in range(len(folders_list) - 1, -1, -1):
+	for ii in range(len(folders_list) - 1, 0, -1):
 		if (ii > 1 and folders_list[ii - 1] == "include" and
 			folders_list[ii] == folders_list[ii - 2]):
 
 			header_guard_components.append(folders_list[ii - 2])
+			break
+		elif ii > 0 and folders_list[ii] == "include":
+			header_guard_components.append(folders_list[ii - 1])
 			break
 		else:
 			header_guard_components.append(folders_list[ii])
