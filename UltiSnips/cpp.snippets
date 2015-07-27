@@ -5,6 +5,104 @@ extends c
 # We want to overwrite everything in parent ft.
 priority -49
 
+global !p
+
+################################################################################
+#                    Doxygen Documentation Helper Functions                    #
+################################################################################
+
+class Arg(object):
+	def __init__(self, arg):
+		self.arg = arg
+		tmp = arg.split('=')[0].split()
+		self.name = tmp[-1].strip()
+		self.type = ' '.join(tmp[:len(tmp)-1])
+
+	def __str__(self):
+		return self.name
+
+	def __unicode__(self):
+		return self.name
+
+	def is_kwarg(self):
+		return '=' in self.arg
+
+	def get_type(self):
+		return self.type
+
+
+def get_args(arglist):
+	args = [Arg(arg) for arg in arglist.split(',') if len(arg.split()) >= 2]
+
+	return args
+
+def format_arg(arg):
+	return " * @param %s [%s] TODO" % (arg, arg.get_type())
+
+
+def format_return(arg):
+	if arg == "void":
+		return " * @return [%s]" % arg
+	else:
+		return " * @return [%s] TODO" % arg
+
+
+def write_docstring_args(args, snip):
+	for arg in args:
+		snip += format_arg(arg)
+
+
+def write_function_docstring(t, snip):
+	"""
+	Writes a function docstring with the current style.
+
+	:param t: The values of the placeholders
+	:param snip: UltiSnips.TextObjects.SnippetUtil object instance
+	"""
+	snip.rv = ""
+
+	args = get_args(t[2])
+	if args:
+		write_docstring_args(args, snip)
+
+	snip += format_return(t[3])
+
+
+def write_constructor_docstring(t, snip):
+	"""
+	Writes a constructor docstring with the current style.
+
+	:param t: The values of the placeholders
+	:param snip: UltiSnips.TextObjects.SnippetUtil object instance
+	"""
+	snip.rv = ""
+	snip >> 1
+	args = get_args(t[2])
+	snip += '/**'
+	if args:
+		snip += ' * @brief Constructor. Initializes member variables.'
+		write_docstring_args(args, snip)
+	else:
+		snip += ' * @brief Default Constructor.'
+	snip += ' */'
+
+
+def write_destructor_docstring(t, snip):
+	"""
+	Writes a destructor docstring with the current style.
+
+	:param t: The values of the placeholders
+	:param snip: UltiSnips.TextObjects.SnippetUtil object instance
+	"""
+	snip.rv = ""
+	snip >> 1
+	snip += '/**'
+	snip += ' * @brief Default Destructor.'
+	snip += ' */'
+
+
+endglobal
+
 ###########################################################################
 #                            TextMate Snippets                            #
 ###########################################################################
@@ -12,27 +110,41 @@ snippet beginend "$1.begin(), $1.end() (beginend)"
 ${1:v}${1/^.*?(-)?(>)?$/(?2::(?1:>:.))/}begin(), $1${1/^.*?(-)?(>)?$/(?2::(?1:>:.))/}end()
 endsnippet
 
-snippet cl "class .. (class)"
-class ${1:`!p snip.rv = snip.basename or "name"`}
+snippet cl "class with documentation (class)" b
+/**
+ * @class ${1/(\w+).*/$1/} ${5:TODO}
+ */
+class ${1:`!p
+snip.rv = ''.join(map(lambda x: x.capitalize(), snip.basename.split('_'))) or "classname"`}
 {
 public:
-	${1/(\w+).*/$1/}(${2:arguments});
+`!p write_constructor_docstring(t, snip)`
+	${1/(\w+).*/$1/}(${2:/*arguments*/});
+`!p write_destructor_docstring(t, snip)`
 	virtual ~${1/(\w+).*/$1/}();
 
-	${4:/* public methods */}
+	${3:/* public methods */}
+
 private:
-	${3:/* private methods */}
+	${4:/* private methods */}
 
 private:
 	${0:/* data */}
 };
 endsnippet
 
+snippet fundoc "method declaration with documentation" b
+/**
+ * @brief ${7:TODO}`!p write_function_docstring(t, snip)`
+ */
+${4:virtual} ${3:void} ${1:memberFunction}(${2:/*arguments*/}) ${5:const};
+endsnippet
+
 snippet ns "namespace .. (namespace)"
 namespace${1/.+/ /m}${1:`!p snip.rv = snip.basename or "name"`}
 {
 	${VISUAL}${0}
-}${1/.+/  \/\/ /m}namespace $1${1/.+//m}
+}${1/.+/  \/\/ /m}$1${1/.+//m}
 endsnippet
 
 snippet nsros "namespace for ROS.. (namespace)"
@@ -62,9 +174,9 @@ if not snip.c:
 else:
         snip.rv = snip.c`}
 {
-	${VISUAL}${0}
-}${2/.+/  \/\/ /m}namespace $2${2/.+//m}
-}${1/.+/  \/\/ /m}namespace $1${1/.+//m}
+        ${VISUAL}${0}
+}${2/.+/  \/\/ /m}$2${2/.+//m}
+}${1/.+/  \/\/ /m}$1${1/.+//m}
 endsnippet
 
 snippet readfile "read file (readF)"
