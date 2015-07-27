@@ -19,6 +19,7 @@ public:
 	${1/(\w+).*/$1/}(${2:arguments});
 	virtual ~${1/(\w+).*/$1/}();
 
+	${4:/* public methods */}
 private:
 	${3:/* private methods */}
 
@@ -31,7 +32,7 @@ snippet ns "namespace .. (namespace)"
 namespace${1/.+/ /m}${1:`!p snip.rv = snip.basename or "name"`}
 {
 	${VISUAL}${0}
-}${1/.+/  \/\/ /m}$1${1/.+//m}
+}${1/.+/  \/\/ /m}namespace $1${1/.+//m}
 endsnippet
 
 snippet nsros "namespace for ROS.. (namespace)"
@@ -61,9 +62,9 @@ if not snip.c:
 else:
         snip.rv = snip.c`}
 {
-        ${VISUAL}${0}
-}${2/.+/  \/\/ /m}$2${2/.+//m}
-}${1/.+/  \/\/ /m}$1${1/.+//m}
+	${VISUAL}${0}
+}${2/.+/  \/\/ /m}namespace $2${2/.+//m}
+}${1/.+/  \/\/ /m}namespace $1${1/.+//m}
 endsnippet
 
 snippet readfile "read file (readF)"
