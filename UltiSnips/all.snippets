@@ -53,7 +53,7 @@ ${2:${VISUAL:Content}}
 `!p snip.rv = get_comment_format()[0]` `!p snip.rv = foldmarker()[1]` $1 `!p snip.rv = get_comment_format()[2]`
 endsnippet
 
-snippet foldp "Insert a vim fold marker pair using a nice box over the full width" b
+snippet foldb "Insert a vim fold marker pair using a nice box over the full width" b
 `!p
 if not snip.c:
   width = int(vim.eval("&textwidth - (virtcol('.') == 1 ? 0 : virtcol('.'))")) or 71
